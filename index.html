@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Molecular Simulations of Thermosetting Polymers — Virginia Tech 2026</title>
+<meta name="description" content="Cameron F. Abrams, Virginia Tech Chemical Engineering, 12 October 2026: toughening thermosets without sacrificing thermomechanical stability, using protovoids and molecular dynamics. 34 slides plus 3 backup slides.">
+<meta name="color-scheme" content="dark light">
+<meta property="og:title" content="Molecular Simulations of Thermosetting Polymers">
+<meta property="og:description" content="Virginia Tech, Chemical Engineering — 12 October 2026. Page through the slides.">
+<meta property="og:image" content="slides/01.png">
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<style>
+:root{ --bg:#101208; --chrome:#EDECE0; --dim:#8D9080; --line:#2B2E22; --accent:#A3C464; --stage:#FFFFEA; }
+:root[data-theme="light"]{ --bg:#E7E6D8; --chrome:#1B1D18; --dim:#63665A; --line:#CFCEBE; --accent:#5F7D33; }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0; background:var(--bg); color:var(--chrome); overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; -webkit-tap-highlight-color:transparent;}
+.app{height:100%; display:flex; flex-direction:column; padding-inline:10px;}
+.head{flex:0 0 auto; padding-block:10px 6px; font-size:12px; color:var(--dim); text-align:center;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.stage{flex:1 1 auto; display:flex; align-items:center; justify-content:center; min-height:0; position:relative;}
+.stage img{max-width:100%; max-height:100%; width:auto; height:auto; background:var(--stage); border-radius:2px;
+  box-shadow:0 6px 22px rgba(0,0,0,.35); display:block;}
+.zone{position:absolute; top:0; bottom:0; width:38%; border:0; background:transparent; cursor:pointer; padding:0;}
+.zone.l{left:0} .zone.r{right:0; width:62%}
+.bar{flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:10px;
+  padding-block:10px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));}
+button{font:inherit; color:var(--chrome); background:transparent; border:1px solid var(--line); border-radius:999px;
+  padding:9px 16px; cursor:pointer; min-width:52px;}
+button:disabled{opacity:.35}
+button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+#count{border-color:transparent; font-variant-numeric:tabular-nums; letter-spacing:.02em; min-width:96px}
+#count b{color:var(--accent); font-weight:600}
+.sheet{position:fixed; inset:0; background:var(--bg); z-index:9; overflow:auto;
+  padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));}
+.sheet h2{font-size:15px; margin:0 0 12px; color:var(--dim); font-weight:500;}
+.sheet ol{list-style:none; margin:0; padding:0; display:grid; gap:2px;}
+.sheet li button{display:flex; gap:10px; width:100%; text-align:left; border:0; border-radius:6px; padding:10px 8px;
+  font-size:15px; line-height:1.3; min-width:0;}
+.sheet li button:hover{background:var(--line)}
+.sheet li button i{font-style:normal; color:var(--dim); font-variant-numeric:tabular-nums; flex:0 0 26px;}
+.sheet li[data-cur="1"] button{color:var(--accent)}
+.close{position:sticky; top:0; float:right; margin:-4px 0 0 8px;}
+</style>
+
+<div class="app">
+  <p class="head" id="head">Molecular Simulations of Thermosetting Polymers · Virginia Tech 2026</p>
+  <div class="stage">
+    <img id="slide" src="slides/01.png" alt="Slide 1" fetchpriority="high">
+    <button class="zone l" id="zl" type="button" aria-label="Previous slide"></button>
+    <button class="zone r" id="zr" type="button" aria-label="Next slide"></button>
+  </div>
+  <div class="bar">
+    <button id="prev" type="button" aria-label="Previous slide">‹</button>
+    <button id="count" type="button" aria-haspopup="dialog">—</button>
+    <button id="next" type="button" aria-label="Next slide">›</button>
+  </div>
+
+<p style="flex:0 0 auto;text-align:center;margin:0;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
+   font-size:12px;color:var(--dim)">
+  <a href="thermosets-2026-abrams.pdf" style="color:var(--accent)">Download the PDF</a> ·
+  <a href="https://github.com/cameronabrams/htpolynet" style="color:var(--accent)">htpolynet</a> ·
+  <a href="https://htpolynet.readthedocs.io/" style="color:var(--accent)">its docs</a>
+</p>
+</div>
+
+<div class="sheet" id="sheet" role="dialog" aria-label="All slides" hidden>
+  <button class="close" id="closeSheet" type="button">Close</button>
+  <h2>All slides — tap one</h2>
+  <ol id="list"></ol>
+</div>
+
+<script>
+const TITLES = ["Molecular Simulations of Thermosetting Polymers", "Thermosetting polymers: extraordinary everyday materials", "Common thermosets: epoxy resins and amine hardeners", "Thermosetting polymer design and use considerations", "The question: what generic topological features determine toughness?", "Molecular dynamics (MD) simulations", "Early work: generic thermosets and 3D network regularity", "Protovoid-based strain hardening of generic network polymers", "Void sizes conform to equilibrium free-volume theory", "Voids can be suppressed using constrained bond angles", "Protovoid: a definition", "Engineering protovoid-based toughening into real epoxy thermosets", "Reactive encapsulation of solvent and drying (RESD): experiments", "RESD: solvent effects partially reproduced by MD", "MD-simulated RESD network architecture is consistent with voids", "Partially reacted substructures (PRS)", "PRS: protovoid-induced toughness enhancement", "PRS: MD of 15 wt% of 60% cured PRS vs. control blend", "The story so far…", "Common thermosets: vinyl ester resins and styrene diluents", "Reactivity ratios in vinyl-ester/styrene thermosets", "Network topology: sensitivity to p₁₂ at constant VE:ST", "Chain-length distributions shift sharply with p₁₂", "Network topology: insensitivity of Tg and E at constant VE:ST", "Estimating quasi-static E using time-temperature superposition", "TTSP with cooling-rate correction gives correct glassy modulus", "htpolynet: network polymer MD system generator", "htpolynet: the CURE algorithm", "htpolynet example: DGEBA/PACM (inputs)", "htpolynet output: the build, stage by stage", "htpolynet output: cure conversion and the final network", "Other recent projects", "Key takeaways", "Acknowledgments", "Backup slides", "Backup: examples of measuring Tg and E (glassy)", "Backup: WLF correction to Tg"];
+const N = TITLES.length;
+const pad = n => String(n).padStart(2, "0");
+const img = document.getElementById("slide"), count = document.getElementById("count"),
+      prev = document.getElementById("prev"), next = document.getElementById("next"),
+      sheet = document.getElementById("sheet"), list = document.getElementById("list"),
+      head = document.getElementById("head");
+let cur = 1;
+const cache = new Map();
+function preload(n){ if(n<1||n>N||cache.has(n)) return; const i=new Image(); i.src="slides/"+pad(n)+".png"; cache.set(n,i); }
+
+function show(n){
+  cur = Math.min(N, Math.max(1, n));
+  img.src = "slides/" + pad(cur) + ".png";
+  img.alt = "Slide " + cur + ": " + TITLES[cur-1];
+  count.innerHTML = "<b>" + cur + "</b> / " + N;
+  head.textContent = TITLES[cur-1];
+  prev.disabled = cur === 1; next.disabled = cur === N;
+  document.querySelectorAll("#list li").forEach((li,i) => li.dataset.cur = (i+1===cur) ? "1" : "0");
+  if (location.hash !== "#" + cur) history.replaceState(null, "", "#" + cur);
+  preload(cur+1); preload(cur+2); preload(cur-1);
+}
+TITLES.forEach((t,i) => {
+  const li = document.createElement("li");
+  const b = document.createElement("button");
+  b.type = "button";
+  b.innerHTML = "<i>" + (i+1) + "</i><span></span>";
+  b.querySelector("span").textContent = t;
+  b.addEventListener("click", () => { sheet.hidden = true; show(i+1); });
+  li.appendChild(b); list.appendChild(li);
+});
+prev.addEventListener("click", () => show(cur-1));
+next.addEventListener("click", () => show(cur+1));
+document.getElementById("zl").addEventListener("click", () => show(cur-1));
+document.getElementById("zr").addEventListener("click", () => show(cur+1));
+count.addEventListener("click", () => { sheet.hidden = false; sheet.scrollTop = Math.max(0,(cur-3)*44); });
+document.getElementById("closeSheet").addEventListener("click", () => { sheet.hidden = true; });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { sheet.hidden = true; return; }
+  if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { show(cur+1); e.preventDefault(); }
+  if (e.key === "ArrowLeft" || e.key === "PageUp") { show(cur-1); e.preventDefault(); }
+  if (e.key === "Home") show(1);
+  if (e.key === "End") show(N);
+});
+let x0 = null, y0 = null;
+addEventListener("touchstart", e => { const t = e.changedTouches[0]; x0 = t.clientX; y0 = t.clientY; }, {passive:true});
+addEventListener("touchend", e => {
+  if (x0 === null) return;
+  const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1));
+  x0 = null;
+}, {passive:true});
+show(Number(location.hash.slice(1)) || 1);
+</script>
+
+</body>
+</html>
